@@ -15,7 +15,6 @@ SELL_PRICE = float(input('Your BTC target sell price: ') or '38700.00')
 BUY_PRICE = float(input ('Your BTC target buy price: ') or '38100.00')
 print("looking to buy at ", BUY_PRICE, " and sell at ", SELL_PRICE)
 
-
 def get_btc_price_robin():
     btc_price = r.crypto.get_crypto_quote('BTC')['mark_price']
     return round(float(btc_price), 8)
@@ -37,19 +36,20 @@ def get_owned_bitcoin():
     # If you don't own BTC, then return 0
     return 0
     
-
 @tl.job(interval=td(seconds=1))
 def trade_btc():
-    sold = False
+    if get_owned_bitcoin() == 0:
+        sold = True
+    else:
+        sold = False
+
     btc = get_btc_price_robin()
 
-    if btc > SELL_PRICE and not(sold):
+    if (btc > SELL_PRICE) and not(sold):
         sell_btc()
-        sold = True
         print("sold bitcoin at: ", btc)
     if sold and btc < BUY_PRICE:
         buy_btc()
-        sold = False
         print("bought bitcoin at: ", btc)
 
 
