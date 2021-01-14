@@ -43,7 +43,7 @@ def trade_btc():
     sold = False
     btc = get_btc_price_robin()
 
-    if btc > SELL_PRICE:
+    if btc > SELL_PRICE and not(sold):
         sell_btc()
         sold = True
         print("sold bitcoin at: ", btc)
